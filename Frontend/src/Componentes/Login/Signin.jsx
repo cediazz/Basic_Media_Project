@@ -5,7 +5,7 @@ import Loading from '../Loading/Loading';
 import { useNavigate } from "react-router-dom"
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-
+import Alert from '../Alert/Alert';
 
 function Signin() {
   const [loading, setLoading] = useState(false)
@@ -43,7 +43,7 @@ function Signin() {
           body: JSON.stringify(dataForm)
         }
 
-        let res = await fetch('http://127.0.0.1:8000/Login/', config)
+        let res = await fetch('http://127.0.0.1:8000/login/', config)
         if (res.status != 401) {
           let data = await res.json()
           console.log(data)
@@ -53,7 +53,7 @@ function Signin() {
           localStorage.setItem('username', data.username)
           localStorage.setItem('firstname', data.first_name) // guardar user y token en el Navegador
           //console.log(JSON.parse(localStorage.getItem('user')).token) //si queremos obtener el token del usuario
-          userContext.setData(data.username)
+          
           setLoading(false)
 
 
@@ -103,11 +103,11 @@ function Signin() {
               <div style={{ textAlign: "center" }}>
                 {loading && <Loading></Loading>}
               </div>
-              {message && <h1>{message}</h1>}
+              {message && <Alert message={message}></Alert>}
             </MDBCol>
           </MDBRow>
         </MDBContainer>
-        : navigate("/")}
+        : navigate("/")}   AQUI ES EL ERROR
     </div>
   );
 }

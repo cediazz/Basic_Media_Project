@@ -5,11 +5,14 @@ from .models import *
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticated
 
 class CategoryView(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     queryset = Category.objects.order_by('description')
     pagination_class = None
+    #permission_classes = [IsAuthenticated]
+    
 
 
 class PlanView(viewsets.ModelViewSet):
@@ -79,8 +82,6 @@ class MediaView(viewsets.ModelViewSet):
     def get_medias_exclude_sons(self, request):
         media_father = request.query_params.get('mediaFather')
         queryset = Media.objects.exclude(id__in=MediaContainer.objects.filter(father__id = media_father).values('son_id'))
-        prueba = MediaContainer.objects.filter(father__id = media_father).values('son_id')
-        print(prueba)
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
 
@@ -101,9 +102,6 @@ class Media_FieldView(viewsets.ModelViewSet):
         queryset = self.filter_queryset(self.get_queryset())
         media_field_serializers = Media_FieldSerializerGet(queryset, many=True)
         return Response(media_field_serializers.data)
-
-
-
 
 
 

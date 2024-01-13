@@ -24,24 +24,20 @@ function Sidebar() {
   const [activeItem, setActiveItem] = useState("");
   const navigate = useNavigate();
 
-
+  useEffect(() => {
+    if(!localStorage.getItem('access'))
+    navigate('/Login');
+  }, []);
 
 
   const handleItemClick = (itemName) => {
     setActiveItem(itemName);
   };
 
-
-
-  // Función para manejar el inicio de sesión
-  const handleLogin = () => {
-    setLoggedIn(true);
-  };
-
-  // Función para manejar el cierre de sesión
-  const handleLogout = () => {
-    setLoggedIn(false);
-  };
+  const Logout = () =>{
+    localStorage.clear()
+    navigate('/Login');
+  }
 
   return (
 
@@ -77,11 +73,11 @@ function Sidebar() {
         </li>
         <li className="mb-1 border-top">
           <button className="btn btn-toggle align-items-center rounded mt-3 " style={{ color: 'blue' }} data-bs-toggle="collapse" data-bs-target="#dashboard-collapse2" aria-expanded="false">
-            Usuario:"Arrelgar"
+            Usuario:{localStorage.getItem('username')}
           </button>
           <div className="collapse" id="dashboard-collapse2">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <Link to="/Login" className="link-dark rounded">Salir</Link>
+              <Link onClick={Logout} className="link-dark rounded">Salir</Link>
 
             </ul>
           </div>

@@ -18,9 +18,11 @@ import Badge from 'react-bootstrap/Badge';
 import MyPagination from "../Pagination/Pagination";
 import delMedia from './deleteMedia'
 import Alert from '../Alert/Alert'
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Media() {
+  
   const [validated, setValidated] = useState(false);
   const [loading, setLoading] = useState(false)
   const [medias, setMedias] = useState([])
@@ -34,7 +36,13 @@ export default function Media() {
   const [cantMedias, setCantMedias] = useState()
   const [pageCount, setPageCount] = useState(0);
   const [del, setDel] = useState(false);
+  const navigate = useNavigate();
   const itemsPerPage = 2;
+
+  useEffect(() => {
+    if(!localStorage.getItem('access'))
+    navigate('/Login');
+  }, []);
 
   useEffect(() => {
     const Plans = async () => {

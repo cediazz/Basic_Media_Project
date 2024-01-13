@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import getAllMediaFieldsSons from '../Plan/getAllMediaFieldsSons';
 import FieldMediaSon from '../Fields/FieldsMediaSon';
 import getMediasExclude from '../../Utils/getMediasExclude';
+import getMediasExcludeSons from '../../Utils/getMediasExcludeSons';
 import getAllMedias from '../FieldsManagement/getAllMedias';
 import getAllMediaFields from '../Plan/getAllMediaFields';
 
@@ -43,6 +44,7 @@ function UpdateMedia() {
     const [selectPlanFatherEnabled, setSelectPlanFatherEnabled] = useState(false);
     const [medias, setMedias] = useState([])
     const [mediasExclude, setMediasExclude] = useState([])
+    const [mediasExcludeSons, setMediasExcludeSons] = useState([])
     const [mediaFatherID, setMediaFatherID] = useState()
     const [mediaSonID, setMediaSonID] = useState()
     const [planFather, setPlanFather] = useState()
@@ -82,6 +84,14 @@ function UpdateMedia() {
             setLoading(false)
         }
         MediasExclude()
+
+        const MediasExcludeSons = async () => {
+            setLoading(true)
+            let data = await getMediasExcludeSons(mediaData.id)
+            setMediasExcludeSons(data)
+            setLoading(false)
+        }
+        MediasExcludeSons()
 
         const MediasSons = async () => {
             setLoading(true)
@@ -219,7 +229,7 @@ function UpdateMedia() {
                                 <Form.Select required onChange={e => { getMediaFather(e.target.value); handleSelectPlanFatherChange(e.target.value) }} >
                                     <option selected disabled value="">Seleccione el Medio</option>
                                     <option value="No">No</option>
-                                    {mediasExclude.map((medias) => medias.description != location.state.description && <option value={medias.description}>{medias.description}</option>)}
+                                    {mediasExcludeSons.map((medias) => medias.description != location.state.description && <option value={medias.description}>{medias.description}</option>)}
                                 </Form.Select>
                                 <Form.Control.Feedback type="invalid">Por favor seleccione el Medio</Form.Control.Feedback>
                             </Form.Group>}

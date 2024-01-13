@@ -85,7 +85,7 @@ export default function FieldsManagement() {
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Row className="mb-3 mt-3">
           <Form.Group as={Col} md="4" controlId="validationCustom01">
-            <Form.Label>Seleccione el Medio</Form.Label>
+            <Form.Label>Seleccione la categoría</Form.Label>
             <Form.Select required onChange={e => setCategorySelected(e.target.value)}>
               <option selected disabled value="">Seleccione la Categoría</option>
               {categorys.map((category) => <option value={category.id}>{category.description}</option>)}
