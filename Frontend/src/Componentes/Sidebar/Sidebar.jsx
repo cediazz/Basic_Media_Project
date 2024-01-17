@@ -13,8 +13,8 @@ import { BsMapFill } from 'react-icons/bs';
 import { BsFillUsbDriveFill } from 'react-icons/bs';
 import { BsFillFileEarmarkFill } from 'react-icons/bs';
 import { BsFillHddStackFill } from 'react-icons/bs';
-import { BsGraphUp } from 'react-icons/bs';
-
+import { BsGeoAltFill } from "react-icons/bs";
+import iconMB from './iconMB.png'
 
 function Sidebar() {
 
@@ -24,26 +24,23 @@ function Sidebar() {
   const [activeItem, setActiveItem] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if(!localStorage.getItem('access'))
-    navigate('/Login');
-  }, []);
+
 
 
   const handleItemClick = (itemName) => {
     setActiveItem(itemName);
   };
 
-  const Logout = () =>{
+  const Logout = () => {
     localStorage.clear()
-    navigate('/Login');
+
   }
 
   return (
 
     <div className="flex-shrink-0 p-3  bg-light MySideBar " >
-      <div className="d-flex align-items-center pb-3 mb-3   border-bottom">
-        <img className="bi me-2" src={""} />
+      <div className="d-flex justify-content-center align-items-center pb-3 mb-3   border-bottom">
+        <img className="bi me-2" src={iconMB} />
       </div>
       <ul className="list-unstyled ps-0 " >
         <li className="mb-1">
@@ -68,17 +65,24 @@ function Sidebar() {
           </div>
         </li>
         <li className="mb-1">
-          <Link to="/planos" className="link-dark rounded" style={{ textDecoration: "none" }}><button className="btn btn-toggle align-items-center rounded " style={{ color: 'blue' }} >Planos</button></Link>
-
+          <button className="btn btn-toggle align-items-center rounded " style={{ color: 'blue' }} data-bs-toggle="collapse" data-bs-target="#dashboard-collapse2" aria-expanded="false">
+            Planos
+          </button>
+          <div className="collapse mt-1" id="dashboard-collapse2">
+            <ListGroup >
+              <ListGroup.Item action active={activeItem === "Visualizar Planos"} onClick={() => { handleItemClick("Visualizar Planos"); navigate("/planos") }} >
+                <BsGeoAltFill /> Visualizar Medios
+              </ListGroup.Item>
+            </ListGroup>
+          </div>
         </li>
         <li className="mb-1 border-top">
-          <button className="btn btn-toggle align-items-center rounded mt-3 " style={{ color: 'blue' }} data-bs-toggle="collapse" data-bs-target="#dashboard-collapse2" aria-expanded="false">
-            Usuario:{localStorage.getItem('username')}
+          <button className="btn btn-toggle align-items-center rounded mt-3 " style={{ color: 'blue' }} data-bs-toggle="collapse" data-bs-target="#dashboard-collapse3" aria-expanded="false">
+            Usuario: {localStorage.getItem('username') ? localStorage.getItem('username') : " no registrado"}
           </button>
-          <div className="collapse" id="dashboard-collapse2">
+          <div className="collapse" id="dashboard-collapse3">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <Link onClick={Logout} className="link-dark rounded">Salir</Link>
-
+              <Link onClick={Logout} to="/Login" className="link-dark rounded">Salir</Link>
             </ul>
           </div>
         </li>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { MDBContainer, MDBCol, MDBRow} from 'mdb-react-ui-kit';
-import { EstadoUsersGlobal } from '../Context/StateUsersGlobals'
 import Loading from '../Loading/Loading';
 import { useNavigate } from "react-router-dom"
 import Button from 'react-bootstrap/Button';
@@ -12,7 +11,6 @@ function Signin() {
   const [error, setError] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const userContext = React.useContext(EstadoUsersGlobal)
   const [message, setMessage] = useState()
   const [validated, setValidated] = useState(false);
   const navigate = useNavigate()
@@ -107,7 +105,7 @@ function Signin() {
             </MDBCol>
           </MDBRow>
         </MDBContainer>
-        : navigate("/")}   AQUI ES EL ERROR
+        : navigate("/")}   
     </div>
   );
 }

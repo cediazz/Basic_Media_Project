@@ -34,12 +34,13 @@ class MediaView(viewsets.ModelViewSet):
     serializer_class = MediaSerializer
     queryset = Media.objects.order_by('description')
     pagination_class = None
+    #permission_classes = [IsAuthenticated]
     filterset_fields = {
         'description': ['exact'],
         'category__description': ['exact'],
         'plan__description': ['exact']
     }
-
+    
 
     @action(detail=False, methods=['GET'])
     def get_media_view(self, request):
