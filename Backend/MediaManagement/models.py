@@ -1,10 +1,10 @@
 from django.db import models
 
 class Category(models.Model):
-    description = models.CharField(max_length=64, unique=True)
+    description = models.CharField(max_length=64, unique=True,verbose_name = 'descripción')
     image = models.ImageField(upload_to='CategoryImages', blank=True)
     class Meta:
-        verbose_name = 'category'
+        verbose_name = 'categoría'
 
 class Plan(models.Model):
     description = models.CharField(max_length=255, unique=True)

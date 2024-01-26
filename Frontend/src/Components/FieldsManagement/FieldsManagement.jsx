@@ -8,34 +8,17 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { BsFillSignIntersectionFill } from 'react-icons/bs';
 import Alert from '../Alert/Alert'
-import Field from "../Fields/Fields";
-import getAllMedias from "./getAllMedias";
-import InsertField from "./insertField";
-import getCategorys from "../CategoryManagement/getCategorys";
+import useFetch from "../../Hooks/useFetch";
 
 export default function FieldsManagement() {
+  const { data, loading, error, message, specificData, refetchData, insertData, fetchData, deleteData } = useFetch()
   const [validated, setValidated] = useState(false)
-  const [loading, setLoading] = useState(false)
   const [categorySelected, setCategorySelected] = useState("Seleccione la Categoría")
-  const [categorys, setCategorys] = useState([])
   const [nameField, setNameField] = useState()
-  const [message, setMessage] = useState()
-  const [error, setError] = useState(false)
 
   useEffect(() => {
-
-    const Categorys = async () => {
-      setLoading(true)
-      let data = await getCategorys()
-      setCategorys(data)
-      setLoading(false)
-
-  }
-  Categorys()
-
-
+    fetchData('http://127.0.0.1:8000/Categorys/')
   }, [])
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -45,39 +28,25 @@ export default function FieldsManagement() {
       setValidated(true);
     }
     else {
-      setLoading(true)
       let dataForm = {
         name: nameField,
         category: categorySelected
       }
-      setMessage()
-      let data = await InsertField(dataForm)
-      if (data != 'fail') {
-        setMessage("Campo Insertado")
-
+      let config = {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          //'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(dataForm)
       }
-      setLoading(false)
+      insertData(`http://127.0.0.1:8000/Fields/`, config)
+
     }
 
 
   };
-
-  /*const deleteField = (index) => {
-    //console.log(fields.length)
-    //console.log(index)
-
-    const newFields = [...fields]
-    newFields.splice(index, 1)
-    setFields(newFields)
-    console.log(newFields.length)
-    console.log(newFields)
-
-
-  };*/
-
-
-
-
 
   return (
 
@@ -88,7 +57,7 @@ export default function FieldsManagement() {
             <Form.Label>Seleccione la categoría</Form.Label>
             <Form.Select required onChange={e => setCategorySelected(e.target.value)}>
               <option selected disabled value="">Seleccione la Categoría</option>
-              {categorys.map((category) => <option value={category.id}>{category.description}</option>)}
+              {data && data.map((category) => <option value={category.id}>{category.description}</option>)}
             </Form.Select>
             <Form.Control.Feedback type="invalid">Por favor seleccione la Categoría</Form.Control.Feedback>
           </Form.Group>
@@ -100,7 +69,7 @@ export default function FieldsManagement() {
                 <Form.Control type="text" required onChange={e => setNameField(e.target.value)} />
                 <Form.Control.Feedback type="invalid">Por favor introduzca el nombre</Form.Control.Feedback>
               </Form.Group>
-            
+
             </>
           }
 

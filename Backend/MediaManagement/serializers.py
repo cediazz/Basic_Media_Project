@@ -1,4 +1,5 @@
 from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from .models import Category, Plan, Coordinadas, Media, Field, MediaContainer, Media_Field
 from django.db.models import F
 from .Utils import insert_fields,update_son,update_fields,update_plans_coordinadas,insert_inside_father
@@ -16,6 +17,9 @@ class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
+    
+    
+        
 
 
 class PlanSerializer(ModelSerializer):
