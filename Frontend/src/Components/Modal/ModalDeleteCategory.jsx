@@ -1,29 +1,41 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { BsFillBellFill } from 'react-icons/bs';
 import {BsFillTrashFill} from 'react-icons/bs';
+import { useDispatch, useSelector } from 'react-redux'
+import { categoryDelete,listCategorys } from '../../actions/categoryActions';
+import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 function ModalDeleteCategory(props) {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(true)
+  const dispatch = useDispatch()
+  const deleteState = useSelector(state => state.categoryDelete)
+  const { loading, error, message } = deleteState
+  const {id} = useParams()
+  const navigate = useNavigate();
 
+  const delCategory = () =>{
+   dispatch(categoryDelete(props.categoryID))
+   props.setShowModal(false)
+   setShow(false)
+   props.setReloadData(true)
+  }
+  
+  
+  
   const handleClose = () => {
-    setShow(false);
+    setShow(false)
     props.setShowModal(false)
   }
   const handleShow = () => setShow(true);
 
-  const delCategory = () =>{
-    props.deleteCategory(props.categoryID)
-    setShow(false);
-    props.setShowModal(false)
-  }
+  
 
   return (
     <>
-     
-
-      <Modal
+     <Modal
         show={show}
         onHide={handleClose}
         backdrop="static"

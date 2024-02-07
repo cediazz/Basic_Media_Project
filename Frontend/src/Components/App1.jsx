@@ -15,7 +15,8 @@ import Map from './Map/Map'
 import UpdateMedia from './UpdateMedia/UpdateMedia'
 import MyButtonToolbar from './MediaManagement/ButtonToolbar'
 import Home from './Home/Home'
-
+import ModalDeleteCategory from './Modal/ModalDeleteCategory'
+import SpecificCategory from './specificCategory/specificCategory'
 
 
 function App1() {
@@ -39,6 +40,7 @@ function App1() {
                 <Route path="/planos" element={<PlanView />} />
                 <Route path="/button-toolbar" element={<MyButtonToolbar />} />
                 <Route path="/detalles-medio" element={<UpdateMedia />} />
+                <Route path="/detalles-categoria/:id" element={<SpecificCategory />} />
               </Routes>
             </Col>
           </Row>

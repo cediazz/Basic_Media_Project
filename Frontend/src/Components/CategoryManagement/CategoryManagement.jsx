@@ -1,5 +1,5 @@
 import React from "react";
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Container } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -11,19 +11,32 @@ import Loading from "../Loading/Loading";
 import Image from 'react-bootstrap/Image';
 import Alert from '../Alert/Alert'
 import ModalDeleteCategory from "../Modal/ModalDeleteCategory";
-import useFetch from "../../Hooks/useFetch";
+import { useNavigate } from 'react-router-dom';
+
+import { useDispatch, useSelector } from 'react-redux'
+import { listCategorys } from "../../actions/categoryActions";
+import SpecificCategory from "../specificCategory/specificCategory";
 
 export default function Category() {
   const [validated, setValidated] = useState(false)
-  const { data, loading, error, message, specificData, refetchData, insertData, fetchData, deleteData } = useFetch('http://127.0.0.1:8000/Categorys/')
   const [categorySelected, setCategorySelected] = useState("Seleccione la Categoría")
   const [description, setDescription] = useState()
   const [image, setImage] = useState()
   const [showModal, setShowModal] = useState(false)
-
-  /*useEffect(()=>{
-    fetchData('http://127.0.0.1:8000/Categorys/')
-  },[] )*/
+  const dispatch = useDispatch()
+  const categoryList = useSelector(state => state.categoryList)
+  //const { loading, error, categorys } = categoryList
+  //const [message, setMessage] = useState()
+  const navigate = useNavigate();
+  const [reloadData, setReloadData] = useState(false);
+  const deleteState = useSelector(state => state.categoryDelete)
+  const { loading, error, message,categorys } = deleteState
+  //***RESOLVER EL PROBLEMA DE QUE NO ACTUALIZA EL ESTADO DE LAS CATEGORIAS LUEGO DE ELIMINAR ALGUNA*****
+  useEffect(() => {
+    
+    dispatch(listCategorys()) // NO FUNCIONA DESPUES DE EJECUTAR LA ACCION DE ELIMINAR
+    console.log("AGAIN")
+  }, [reloadData])
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -40,33 +53,24 @@ export default function Category() {
         uploadData.append('image', image, image.name)
       let config = {
         method: 'POST',
-        /*headers: {
+        headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-         //'Authorization': `Bearer ${token}`
-        }*/
+          //'Authorization': `Bearer ${token}`
+        },
         body: uploadData
       }
-      insertData('http://127.0.0.1:8000/Categorys/', config)
-      
-    }
-  };
+      //insertData('http://127.0.0.1:8000/Categorys/', config)
 
-  const getCategory = (value) => {
-    setCategorySelected(value)
-    fetchData('http://127.0.0.1:8000/Categorys/', value)
+    }
   }
+   
+  
 
-  const deleteCategory = (value) => {
-    let config = {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      }
-    }
-    deleteData('http://127.0.0.1:8000/Categorys/', value, config)
+  const refreshCategorys = () => {
     setCategorySelected("Seleccione la Categoría")
+    dispatch(listCategorys())
+   
 
   }
 
@@ -76,9 +80,9 @@ export default function Category() {
         <Row className="mb-3 mt-3">
           <Form.Group as={Col} md="4" controlId="validationCustom02">
             <Form.Label>Seleccionar Categoría</Form.Label>
-            <Form.Select required value={categorySelected} onChange={e => getCategory(e.target.value)}>
+            <Form.Select required value={categorySelected} onChange={e => {setCategorySelected(e.target.value)}}>
               <option selected disabled value="Seleccione la Categoría">Seleccione la Categoría</option>
-              {data && data.map((category) => <option value={category.id}>{category.description}</option>)}
+              {categoryList.categorys && categoryList.categorys.map((category) => <option value={category.id}>{category.description}</option>)}
             </Form.Select>
             <Form.Control.Feedback type="invalid">Por favor seleccione la Categoría</Form.Control.Feedback>
           </Form.Group>
@@ -96,27 +100,35 @@ export default function Category() {
           </Form.Group>
         </Row>
         <Row>
-          <Col sm={3}><Button className="mb-3" type="submit" variant="outline-primary"><BsFillSignIntersectionFill /> Guardar</Button></Col>
+          <Col sm={3}>
+            <Button className="mb-3" type="submit" variant="outline-primary">
+              <BsFillSignIntersectionFill />
+              Guardar
+            </Button>
+          </Col>
           {categorySelected != "Seleccione la Categoría" &&
-            <Col sm={9}><Button className="mb-3" onClick={() => setShowModal(true)} variant="outline-danger"><BsFillTrashFill /> Eliminar</Button></Col>
-
-          }
+            <Col sm={9}>
+              <Button className="mb-3" onClick={() => setShowModal(true)} variant="outline-danger">
+                <BsFillTrashFill />
+                Eliminar
+              </Button>
+            </Col>}
         </Row>
-
       </Form>
       <Row className="mt-3" >
         <div style={{ textAlign: "center" }}>
-          {loading && <Loading />}
+          {categoryList.loading && <Loading />}
         </div>
       </Row>
       <Row>
-        {specificData && <Image src={specificData.image} thumbnail />}
+      {categorySelected != "Seleccione la Categoría" && <SpecificCategory id={categorySelected} />}
       </Row>
       <Row>
-        {message && <Alert message={message} error={error}></Alert>}
+        {message && <Alert message={message} error={categoryList.error}></Alert>}
       </Row>
-      {showModal == true && <ModalDeleteCategory categoryID={categorySelected} deleteCategory={deleteCategory} setShowModal={setShowModal} />}
-
+      {showModal == true && <ModalDeleteCategory categoryID={categorySelected} setReloadData={setReloadData}  refreshCategorys={refreshCategorys} setShowModal={setShowModal} />}
+    {message}
+    {categorys}
     </Container>
   );
 

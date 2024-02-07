@@ -23,7 +23,7 @@ class Coordinadas(models.Model):
 
 class Field(models.Model):
     name = models.CharField(max_length=64)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='fields')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='fields')
 
     class Meta:
         verbose_name = 'field'
